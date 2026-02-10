@@ -23,14 +23,14 @@ export interface DashboradStateShapeInterface {
     error: null | string,
     formOpen: boolean,
     formMode: 'add' | 'edit',
-    editingEventId: null | number
+    editingEventId: null | string
 }
 
 export type DashboardAction = 
   | { type: 'LOAD_START' }
   | { type: 'LOAD_SUCCESS'; payload: EventInterface[] }
   | { type: 'LOAD_ERROR'; payload: string }
-  | { type: 'OPEN_FORM'; payload: { mode: 'add' | 'edit'; eventId?: string | number } }
+  | { type: 'OPEN_FORM'; payload: { mode: 'add' | 'edit'; eventId?: string } }
   | { type: 'CLOSE_FORM' }
   | { type: 'ADD_EVENT'; payload: EventInterface }
   | { type: 'EDIT_EVENT'; payload: EventInterface };
