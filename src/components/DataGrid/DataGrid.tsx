@@ -4,18 +4,36 @@ import type { Column, EventInterface } from "../../contracts";
 interface DataGridProps {
   data: EventInterface[];
   columns: Column<EventInterface>[];
+  loading?: boolean,
+  error?: string | null
 }
 // Potentially make the component generic to accept other data types other than the event I am using? 
-export const DataGrid = ({ data, columns }: DataGridProps) => {
+export const DataGrid = ({ data, columns, loading, error }: DataGridProps) => {
   const visibleColumns = columns.filter((col) => col.visible !== false);
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
-  const totalPages = Math.ceil(data.length/itemsPerPage)
   const [sortingState, setSortingState] = useState({key: '', direction: 'asc'})
   const currentlyActiveColumn = visibleColumns.find((item) => item.key === sortingState.key)
   // using dynamic obj for now - might later refactor once I decide which cols are filterable
   const [filters, setFilters] = useState<Record<string, string>>({});
-  const sortedData = [...data].sort((a,b) => {
+  
+  const filteredData = data.filter(item => {
+    return visibleColumns.every(col => {
+        // Skip non-filterable columns
+        if (col.filterable === false) return true;
+        
+        // If no filter for this column, pass
+        const filterValue = filters[col.key];
+        if (!filterValue) return true;
+        
+        // Check if value includes filter (substring match)
+        const value = String(col.accessor(item)).toLowerCase();
+        return value.includes(filterValue.toLowerCase());
+    });
+    });
+  const totalPages = Math.ceil(filteredData.length/itemsPerPage)
+
+  const sortedData = [...filteredData].sort((a,b) => {
     if(!currentlyActiveColumn) return 0
 
     const aValue = currentlyActiveColumn.accessor(a)
@@ -57,14 +75,41 @@ export const DataGrid = ({ data, columns }: DataGridProps) => {
     }
   }
 
-  function handleFilterChange(event:React.ChangeEvent<HTMLInputElement>, columnKey: string) {
-    setFilters(prev => ({...prev, columnKey: event?.target.value}))
+const handleFilterChange = (event:React.ChangeEvent<HTMLInputElement>, columnKey: string): void => {
+  setFilters(prev => ({...prev, [columnKey]: event?.target.value}))
+}
+  // maybe if time handle this with some spinners MUI? 
+  const renderLoading = () => {
+    return (
+        <div className="loading-container">
+            <h1>Loading your data...</h1>
+        </div>
+    )
+  } 
+
+  const renderError = () => {
+    return (
+        <div className="error-container">
+            <h1>There has been an issue with you data.</h1>
+            <h3>Error: {error}</h3>
+        </div>
+    )
   }
 
+  const renderEmpty = () => {
+    return (
+        <div className="empty-container">
+        <h2>No events found</h2>
+        <p>Try adjusting your filters</p>
+        </div>
+    );
+    };
 
-  return (
-    <div className="data-grid-container">
-      <table className="data-grid-table">
+return (
+<div className="data-grid-container">
+    {loading ? renderLoading() : error ? renderError() :
+        <>
+          <table className="data-grid-table">
         <thead>
           <tr>
             {visibleColumns.map((col) => (
@@ -78,14 +123,14 @@ export const DataGrid = ({ data, columns }: DataGridProps) => {
               </th>
             ))}
           </tr>
-        </thead>
         <tr>
             {visibleColumns.map((column) => (
-                column.filterable && <input type="text" name="" id="" onChange={() => handleFilterChange(event, column.key)} />
+                column.filterable && <input key={column.key} type="text" onChange={(event) => handleFilterChange(event, column.key)} />
             ))}
         </tr>
+        </thead>
         <tbody>
-          {currentPageData.map((item) => (
+          {filteredData.length === 0 ? renderEmpty() : currentPageData.map((item) => (
             <tr key={item.id}>
               {visibleColumns.map((col) => (
                 <td key={col.key}>{String(col.accessor(item))}</td>
@@ -99,6 +144,8 @@ export const DataGrid = ({ data, columns }: DataGridProps) => {
         <p>{currentPage}</p>
         <button disabled={currentPage===1} onClick={handlePreviousPage}>Previous</button>
       </div>
+        </>
+      }
     </div>
   );
 };
