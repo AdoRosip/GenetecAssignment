@@ -1,14 +1,16 @@
 import { useState } from "react";
 import type { Column, EventInterface } from "../../contracts";
+import "./DataGrid.css";
 
 interface DataGridProps {
   data: EventInterface[];
   columns: Column<EventInterface>[];
   loading?: boolean,
-  error?: string | null
+  error?: string | null,
+  onEditEvent?: (event: EventInterface) => void
 }
 // Potentially make the component generic to accept other data types other than the event I am using? 
-export const DataGrid = ({ data, columns, loading, error }: DataGridProps) => {
+export const DataGrid = ({ data, columns, loading, error, onEditEvent }: DataGridProps) => {
   const visibleColumns = columns.filter((col) => col.visible !== false);
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
@@ -135,14 +137,19 @@ return (
               {visibleColumns.map((col) => (
                 <td key={col.key}>{String(col.accessor(item))}</td>
               ))}
+              {onEditEvent && (
+                <td>
+                  <button onClick={() => onEditEvent(item)}>Edit</button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
       <div className="controls">
-        <button disabled={currentPage===totalPages} onClick={handleNextPage}>Next</button>
+      <button disabled={currentPage===1} onClick={handlePreviousPage}>Previous</button>
         <p>{currentPage}</p>
-        <button disabled={currentPage===1} onClick={handlePreviousPage}>Previous</button>
+      <button disabled={currentPage===totalPages} onClick={handleNextPage}>Next</button>
       </div>
         </>
       }
