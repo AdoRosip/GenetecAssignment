@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react';
 import type { Column, EventInterface } from './contracts';
 import { reducer, initialDashboardReducerState } from './reducers/dashboardReducer';
 import { fetchMockEvents } from './utils/mockData';
+import { useTheme } from './hooks/useTheme';
 import { DataGrid } from './components/DataGrid/DataGrid';
 import { Timeline } from './components/Timeline/Timeline';
 import { EventForm } from './components/EventForm/EventForm';
@@ -9,6 +10,7 @@ import './Dashboard.css';
 
 const Dashboard = () => {
   const [dashboardState, dispatch] = useReducer(reducer, initialDashboardReducerState);
+  const { isDark, toggleTheme } = useTheme();
 
   const columns: Column<EventInterface>[] = [
     {
@@ -84,8 +86,26 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <h1>Event Manager</h1>
+      {dashboardState.status === 'loading' && (
+        <div className="loading-overlay">
+          <div className="loading-spinner"></div>
+          <p>Loading events...</p>
+        </div>
+      )}
       
+      <header>
+        <h1>Event Manager</h1>
+        <button onClick={toggleTheme} className="btn-theme-toggle" aria-label="Toggle theme">
+          {isDark ? '☀️ Light' : '🌙 Dark'}
+        </button>
+      </header>
+      
+      {!dashboardState.formOpen && dashboardState.status !== 'loading' && (
+        <button onClick={handleAddEvent} className="btn-add-event" disabled={dashboardState.status !== 'ready'}>
+          Add New Event
+        </button>
+      )}
+
       {dashboardState.formOpen && (
         <section className="form-section">
           <h2>{dashboardState.formMode === 'add' ? 'Add New Event' : 'Edit Event'}</h2>
@@ -95,12 +115,6 @@ const Dashboard = () => {
             initialData={getInitialDataForForm()}
           />
         </section>
-      )}
-
-      {!dashboardState.formOpen && (
-        <button onClick={handleAddEvent} className="btn-add-event">
-          Add New Event
-        </button>
       )}
 
       <div className="dashboard-content">
