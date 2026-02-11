@@ -13,20 +13,6 @@ const MOCK_TITLE_EXAMPLE_IDEAS = [
   'Retrospective meeting'
 ]
 
-const MOCK_DESCRIPTIONS = [
-  'Review progress and outline next steps.',
-  'Discuss current status and open questions.',
-  'Align on priorities and deliverables.',
-  'Follow up on previous action items.',
-  'Quick check-in on ongoing work.',
-  'Plan upcoming work and define responsibilities.',
-  'Break down tasks and estimate timelines.',
-  'Coordinate dependencies between teams.',
-  'Finalize scope and milestones.',
-  'Identify risks and mitigation strategies.'
-]
-
-
 const STATUSES: EventStatus[] = ['completed', 'in-progress', 'not-started']
 
 const toIsoDate = (date: Date) => date.toISOString().slice(0, 10);
@@ -46,13 +32,11 @@ export const generateRandomEvent = (id: string): EventInterface => {
     const randomTitleIndex = Math.floor(Math.random() * MOCK_TITLE_EXAMPLE_IDEAS.length)
     const randomDate = randomIsoDate()
     const randomStatusIndex = Math.floor(Math.random() * STATUSES.length)
-    const randomDescriptionIndex = Math.floor(Math.random() * MOCK_DESCRIPTIONS.length)
     // Could be worth the time to enhance the title/desc generation to avoid all events looking the same if I have time
     return {
         id: id,
         title: MOCK_TITLE_EXAMPLE_IDEAS[randomTitleIndex],
         date: randomDate,
-        description: (Math.random() > 0.5) ? MOCK_DESCRIPTIONS[randomDescriptionIndex] : undefined,
         status: STATUSES[randomStatusIndex],
     }
 }

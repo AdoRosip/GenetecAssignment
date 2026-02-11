@@ -4,7 +4,6 @@ export interface EventInterface {
     id: string,
     title: string,
     date: string // ISO yyyy-mm-dd,
-    description?: string,
     status: EventStatus
 }
 

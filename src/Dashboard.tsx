@@ -12,6 +12,14 @@ const Dashboard = () => {
 
   const columns: Column<EventInterface>[] = [
     {
+      key: 'id',
+      label: 'ID',
+      accessor: (e) => e.id,
+      sortable: true,
+      filterable: true,
+      visible: true
+    },
+    {
       key: 'title',
       label: 'Title',
       accessor: (e) => e.title,

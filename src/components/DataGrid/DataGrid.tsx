@@ -77,8 +77,12 @@ export const DataGrid = ({ data, columns, loading, error, onEditEvent }: DataGri
     }
   }
 
-const handleFilterChange = (event:React.ChangeEvent<HTMLInputElement>, columnKey: string): void => {
+const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, columnKey: string): void => {
   setFilters(prev => ({...prev, [columnKey]: event?.target.value}))
+}
+
+const handleResetSort = () => {
+  setSortingState({key: '', direction: 'asc'})
 }
   // maybe if time handle this with some spinners MUI? 
   const renderLoading = () => {
@@ -124,12 +128,45 @@ return (
                 )}
               </th>
             ))}
+            <th>
+              <button 
+                onClick={handleResetSort} 
+                disabled={!sortingState.key}
+                className="reset-sort-btn"
+              >
+                Reset Sort
+              </button>
+            </th>
           </tr>
-        <tr>
-            {visibleColumns.map((column) => (
-                column.filterable && <input key={column.key} type="text" onChange={(event) => handleFilterChange(event, column.key)} />
+          <tr>
+            {visibleColumns.map((col) => (
+              <th key={`filter-${col.key}`}>
+                {col.filterable !== false && (
+                  col.key === 'status' ? (
+                    <select 
+                      value={filters[col.key] || ''} 
+                      onChange={(event) => handleFilterChange(event, col.key)}
+                      className="filter-select"
+                    >
+                      <option value="">All</option>
+                      <option value="completed">Completed</option>
+                      <option value="in-progress">In Progress</option>
+                      <option value="not-started">Not Started</option>
+                    </select>
+                  ) : (
+                    <input 
+                      type="text" 
+                      placeholder={`Filter ${col.label}...`}
+                      value={filters[col.key] || ''}
+                      onChange={(event) => handleFilterChange(event, col.key)} 
+                      className="filter-input"
+                    />
+                  )
+                )}
+              </th>
             ))}
-        </tr>
+            <th></th>
+          </tr>
         </thead>
         <tbody>
           {filteredData.length === 0 ? renderEmpty() : currentPageData.map((item) => (
@@ -137,19 +174,19 @@ return (
               {visibleColumns.map((col) => (
                 <td key={col.key}>{String(col.accessor(item))}</td>
               ))}
-              {onEditEvent && (
-                <td>
+              <td>
+                {onEditEvent && (
                   <button onClick={() => onEditEvent(item)}>Edit</button>
-                </td>
-              )}
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
       <div className="controls">
-      <button disabled={currentPage===1} onClick={handlePreviousPage}>Previous</button>
-        <p>{currentPage}</p>
-      <button disabled={currentPage===totalPages} onClick={handleNextPage}>Next</button>
+        <button disabled={currentPage===1} onClick={handlePreviousPage}>Previous</button>
+        <p>{currentPage} / {totalPages}</p>
+        <button disabled={currentPage===totalPages} onClick={handleNextPage}>Next</button>
       </div>
         </>
       }
