@@ -1,0 +1,59 @@
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  flex: 1;
+}
+
+.dashboard-container h1 {
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+
+.form-section {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.form-section h2 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+.btn-add-event {
+  margin-bottom: 2rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: var(--radius-md);
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.datagrid-section,
+.timeline-section {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+
+.datagrid-section h2,
+.timeline-section h2 {
+  margin-top: 0;
+  color: var(--text-primary);
+}
+
+.datagrid-section p,
+.timeline-section p {
+  color: var(--text-secondary);
+}
