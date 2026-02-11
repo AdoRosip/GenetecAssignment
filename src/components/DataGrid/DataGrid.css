@@ -1,7 +1,9 @@
 .datagrid-wrapper {
   overflow-x: auto;
+  overflow-y: auto;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
+  max-height: 420px;
 }
 
 table {

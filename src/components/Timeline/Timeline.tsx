@@ -54,6 +54,11 @@ export const Timeline = ({events, isLoading, error, onEditEvent}: TimelinePropsI
     const itemRefs = useRef<Array<HTMLLIElement | null>>([])
     const eventIndexById = new Map(flatListOfEvents.map((event, index) => [event.id, index]))
 
+    const formatDate = (dateStr: string): string => {
+    const date = new Date(dateStr + 'T00:00:00')
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' })
+    }
+
     useEffect(() => {
         setFocusedIndex(0)
     },[events.length])
@@ -68,23 +73,24 @@ export const Timeline = ({events, isLoading, error, onEditEvent}: TimelinePropsI
     useEffect(() => {
         const focusedEvent = flatListOfEvents[focusedIndex]
         if (focusedEvent) {
-            setLiveMessage(`${focusedEvent.date}: ${focusedEvent.title}, ${focusedEvent.status}`)
+            const formattedDate = formatDate(focusedEvent.date)
+            setLiveMessage(`Day ${formattedDate}. ${focusedEvent.title}, ${focusedEvent.status}`)
         }
     }, [focusedIndex, flatListOfEvents])
 
-    // const handleItemKeyDown = (event: React.KeyboardEvent) => {
-    //     if (flatListOfEvents.length === 0) return
+    const handleItemKeyDown = (event: React.KeyboardEvent) => {
+        if (flatListOfEvents.length === 0) return
 
-    //     if (event.key === "ArrowDown" || event.key === "ArrowRight") {
-    //         event.preventDefault()
-    //         setFocusedIndex((prev) => Math.min(prev + 1, flatListOfEvents.length - 1))
-    //     }
+        if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+            event.preventDefault()
+            setFocusedIndex((prev) => Math.min(prev + 1, flatListOfEvents.length - 1))
+        }
 
-    //     if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
-    //         event.preventDefault()
-    //         setFocusedIndex((prev) => Math.max(prev - 1, 0))
-    //     }
-    // }
+        if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+            event.preventDefault()
+            setFocusedIndex((prev) => Math.max(prev - 1, 0))
+        }
+    }
 
     const renderLoading = () => {
         return (
@@ -112,10 +118,6 @@ export const Timeline = ({events, isLoading, error, onEditEvent}: TimelinePropsI
         );
     };
 
-    const formatDate = (dateStr: string): string => {
-        const date = new Date(dateStr + 'T00:00:00')
-        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' })
-    }
 
     return (
         <div className="timeline-wrapper">
@@ -162,6 +164,7 @@ export const Timeline = ({events, isLoading, error, onEditEvent}: TimelinePropsI
                                             className="timeline-event"
                                             onFocus={() => setFocusedIndex(globalIndex)}
                                             role="listitem"
+                                            onKeyDown={handleItemKeyDown}
                                         >
                                             <div className="timeline-event-content">
                                                 <div className="timeline-event-title">{event.title}</div>

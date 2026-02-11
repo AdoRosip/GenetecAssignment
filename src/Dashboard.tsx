@@ -84,6 +84,8 @@ const Dashboard = () => {
     return undefined;
   };
 
+  const timelineEvents = dashboardState.events.slice(0, 50);
+
   return (
     <div className="dashboard-container">
       {dashboardState.status === 'loading' && (
@@ -113,7 +115,7 @@ const Dashboard = () => {
             onSave={handleFormSave}
             onCancel={handleFormCancel}
             initialData={getInitialDataForForm()}
-            nextId={String(dashboardState.events.length + 1)}
+            nextId={String(dashboardState.events.length)}
           />
         </section>
       )}
@@ -136,7 +138,7 @@ const Dashboard = () => {
           <h2>Events Timeline</h2>
           {dashboardState.status === 'ready' && (
             <Timeline
-              events={dashboardState.events}
+              events={timelineEvents}
               onEditEvent={handleEditEvent}
             />
           )}

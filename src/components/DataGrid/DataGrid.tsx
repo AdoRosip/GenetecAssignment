@@ -21,14 +21,11 @@ export const DataGrid = ({ data, columns, loading, error, onEditEvent }: DataGri
   
   const filteredData = data.filter(item => {
     return visibleColumns.every(col => {
-        // Skip non-filterable columns
         if (col.filterable === false) return true;
         
-        // If no filter for this column, pass
         const filterValue = filters[col.key];
         if (!filterValue) return true;
         
-        // Check if value includes filter (substring match)
         const value = String(col.accessor(item)).toLowerCase();
         return value.includes(filterValue.toLowerCase());
     });
@@ -84,7 +81,7 @@ const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSele
 const handleResetSort = () => {
   setSortingState({key: '', direction: 'asc'})
 }
-  // maybe if time handle this with some spinners MUI? 
+  // maybe if time handle this with some MUI spinners? 
   const renderLoading = () => {
     return (
         <div className="loading-container">
@@ -102,20 +99,25 @@ const handleResetSort = () => {
     )
   }
 
-  const renderEmpty = () => {
+  const renderEmptyRow = (columnCount: number) => {
     return (
-        <div className="empty-container">
-        <h2>No events found</h2>
-        <p>Try adjusting your filters</p>
-        </div>
+      <tr>
+        <td colSpan={columnCount}>
+          <div className="empty-container">
+            <h2>No events found</h2>
+            <p>Try adjusting your filters</p>
+          </div>
+        </td>
+      </tr>
     );
-    };
+  };
 
 return (
 <div className="data-grid-container">
     {loading ? renderLoading() : error ? renderError() :
         <>
-          <table className="data-grid-table">
+          <div className="datagrid-wrapper">
+            <table className="data-grid-table">
         <thead>
           <tr>
             {visibleColumns.map((col) => (
@@ -129,7 +131,6 @@ return (
               </th>
             ))}
             <th id='button-th'>
-              {/**Potentially refactor for better styling pattern */}
               <button 
                 onClick={handleResetSort} 
                 disabled={!sortingState.key}
@@ -170,7 +171,7 @@ return (
           </tr>
         </thead>
         <tbody>
-          {filteredData.length === 0 ? renderEmpty() : currentPageData.map((item) => (
+          {filteredData.length === 0 ? renderEmptyRow(visibleColumns.length + 1) : currentPageData.map((item) => (
             <tr key={item.id}>
               {visibleColumns.map((col) => (
                 <td key={col.key}>{String(col.accessor(item))}</td>
@@ -183,7 +184,8 @@ return (
             </tr>
           ))}
         </tbody>
-      </table>
+            </table>
+          </div>
       <div className="controls">
         <button disabled={currentPage===1} onClick={handlePreviousPage}>Previous</button>
         <p>{currentPage} / {totalPages}</p>
