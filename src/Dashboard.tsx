@@ -113,6 +113,7 @@ const Dashboard = () => {
             onSave={handleFormSave}
             onCancel={handleFormCancel}
             initialData={getInitialDataForForm()}
+            nextId={String(dashboardState.events.length + 1)}
           />
         </section>
       )}

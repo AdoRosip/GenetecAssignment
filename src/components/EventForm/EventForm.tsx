@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react"
 import type { EventInterface, EventStatus } from "../../contracts"
+import "./EventForm.css"
 
 interface EventFormPropsInterface {
     onSave: (event: EventInterface) => void
     onCancel: () => void
-    initialData?:EventInterface
+    initialData?: EventInterface
+    nextId: string
 }
 
-export const EventForm = ({onSave, onCancel, initialData}: EventFormPropsInterface) => {
+export const EventForm = ({onSave, onCancel, initialData, nextId}: EventFormPropsInterface) => {
     const titleRef = useRef<HTMLInputElement>(null)
     const dateRef = useRef<HTMLInputElement>(null)
     const [successMessage, setSuccessMessage] = useState<string | null>(null) 
@@ -15,13 +17,11 @@ export const EventForm = ({onSave, onCancel, initialData}: EventFormPropsInterfa
         title: string;
         date: string;
         status: EventStatus;
-        description: string;
     }>
         ({
             title: initialData?.title || '',
             date: initialData?.date || '',
-            status: initialData?.status || 'not-started',
-            description: initialData?.description || ''
+            status: initialData?.status || 'not-started'
         });
     const [errors, setErrors] = useState<{title?: string; date?: string}>({})
     const possibleStatus:EventStatus[] = ['completed', 'in-progress', 'not-started']
@@ -49,7 +49,7 @@ export const EventForm = ({onSave, onCancel, initialData}: EventFormPropsInterfa
        }
 
        const eventToSave: EventInterface = {
-        id: initialData?.id || crypto.randomUUID(),
+        id: initialData?.id || nextId,
         ...formData
        }
 
@@ -68,7 +68,7 @@ export const EventForm = ({onSave, onCancel, initialData}: EventFormPropsInterfa
         if(successMessage) setTimeout(() => setSuccessMessage(null), 5000)
     },[successMessage])
 
-    return (
+        return (
         <div className="eventForm-container">
             <form onSubmit={handleSubmit}>
                 <label htmlFor='event-title' >Title</label>
@@ -91,10 +91,10 @@ export const EventForm = ({onSave, onCancel, initialData}: EventFormPropsInterfa
                         <option key={status} value={status}>{status}</option>
                     ))}
                 </select>
-                <label htmlFor='event-description' >Description</label>
-                <input type="text" id="event-description" value={formData.description} onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))} />
-                <button type="submit">Submit</button>
-                <button type="button" onClick={onCancel}>Cancel</button>
+                <div className="form-buttons">
+                    <button type="submit">Submit</button>
+                    <button type="button" onClick={onCancel}>Cancel</button>
+                </div>
             </form>
             {successMessage && <div role="status" aria-live="polite" aria-atomic="true"><h3>{successMessage}</h3></div>}
         </div>

@@ -1,0 +1,118 @@
+.eventForm-container {
+  width: 100%;
+}
+
+.eventForm-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.eventForm-container label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.eventForm-container input,
+.eventForm-container select,
+.eventForm-container textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: all 0.2s ease;
+}
+
+.eventForm-container input:focus,
+.eventForm-container select:focus,
+.eventForm-container textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.eventForm-container input[type="date"] {
+  cursor: pointer;
+}
+
+.eventForm-container select {
+  cursor: pointer;
+}
+
+.eventForm-container textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.form-buttons button {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-buttons button[type="submit"] {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.form-buttons button[type="submit"]:hover {
+  background-color: var(--primary-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.form-buttons button[type="submit"]:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.form-buttons button[type="button"] {
+  background-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.form-buttons button[type="button"]:hover {
+  background-color: var(--border-light);
+}
+
+.eventForm-container .error {
+  color: var(--error-color);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+[role="status"] {
+  padding: 1rem;
+  margin-top: 1rem;
+  background-color: #d1fae5;
+  border: 1px solid var(--success-color);
+  border-radius: var(--radius-md);
+}
+
+[role="status"] h3 {
+  margin: 0;
+  color: var(--success-color);
+  font-size: 0.875rem;
+}

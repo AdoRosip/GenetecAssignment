@@ -128,7 +128,8 @@ return (
                 )}
               </th>
             ))}
-            <th>
+            <th id='button-th'>
+              {/**Potentially refactor for better styling pattern */}
               <button 
                 onClick={handleResetSort} 
                 disabled={!sortingState.key}

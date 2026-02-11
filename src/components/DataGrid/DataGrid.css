@@ -169,13 +169,20 @@ td button:focus {
 
 thead th .reset-sort-btn {
   padding: 0.375rem 0.75rem;
-  background-color: var(--text-secondary);
-  color: black;
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+}
+
+#button-th {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#button-th:hover {
+  background-color: inherit;
 }
 
 /* thead th .reset-sort-btn:hover:not(:disabled) {

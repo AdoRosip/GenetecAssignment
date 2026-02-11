@@ -72,19 +72,19 @@ export const Timeline = ({events, isLoading, error, onEditEvent}: TimelinePropsI
         }
     }, [focusedIndex, flatListOfEvents])
 
-    const handleItemKeyDown = (event: React.KeyboardEvent) => {
-        if (flatListOfEvents.length === 0) return
+    // const handleItemKeyDown = (event: React.KeyboardEvent) => {
+    //     if (flatListOfEvents.length === 0) return
 
-        if (event.key === "ArrowDown" || event.key === "ArrowRight") {
-            event.preventDefault()
-            setFocusedIndex((prev) => Math.min(prev + 1, flatListOfEvents.length - 1))
-        }
+    //     if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+    //         event.preventDefault()
+    //         setFocusedIndex((prev) => Math.min(prev + 1, flatListOfEvents.length - 1))
+    //     }
 
-        if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
-            event.preventDefault()
-            setFocusedIndex((prev) => Math.max(prev - 1, 0))
-        }
-    }
+    //     if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+    //         event.preventDefault()
+    //         setFocusedIndex((prev) => Math.max(prev - 1, 0))
+    //     }
+    // }
 
     const renderLoading = () => {
         return (
@@ -161,7 +161,6 @@ export const Timeline = ({events, isLoading, error, onEditEvent}: TimelinePropsI
                                             tabIndex={focusedIndex === globalIndex ? 0 : -1}
                                             className="timeline-event"
                                             onFocus={() => setFocusedIndex(globalIndex)}
-                                            onKeyDown={handleItemKeyDown}
                                             role="listitem"
                                         >
                                             <div className="timeline-event-content">
